@@ -12,13 +12,14 @@ MainWindow::MainWindow(QWidget *parent) :
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
-  dbtype = new QLabel(this);
-  dbtype->setMinimumSize(80, 0);
-  dbtype->setIndent(15);
-  dbtype->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
+  label_dbtype = new QLabel(this);
+  label_dbtype->setMinimumSize(80, 0);
+  label_dbtype->setIndent(15);
+  label_dbtype->setSizePolicy(QSizePolicy(QSizePolicy::Fixed,
+                                          QSizePolicy::Preferred));
   user = new QLabel(this);
   ui->statusBar->addPermanentWidget(user);
-  ui->statusBar->addPermanentWidget(dbtype);
+  ui->statusBar->addPermanentWidget(label_dbtype);
   QString IPBlock = QStringLiteral("(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])");
   ui->serverIP->setValidator(new QRegExpValidator(QRegExp(
                                IPBlock + "\\." + IPBlock + "\\." + IPBlock + "\\." + IPBlock
@@ -69,12 +70,14 @@ void MainWindow::on_serverDB_currentIndexChanged(int index)
 
 void MainWindow::on_buttonConnect_clicked()
 {
+  DBtype = (DB)ui->serverDB->currentIndex();
+
   if (
     (
-      ui->serverDB->currentIndex() == 0
+      DBtype == DB::SQLITE
       && ui->SQLiteFile->text().length() > 0
     ) || (
-      ui->serverDB->currentIndex() > 0
+      DBtype != DB::SQLITE
       && ui->serverIP->hasAcceptableInput()
       && ui->serverUser->hasAcceptableInput()
       && ui->serverPass->text().length() > 0
@@ -89,4 +92,5 @@ void MainWindow::on_SQLiteSelectFile_clicked()
 {
   QMessageBox::information(this, "Всё норм",
                            "Типа выбор файла");
+  ui->SQLiteFile->setText("Типа имя файла");
 }

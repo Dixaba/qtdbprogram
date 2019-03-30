@@ -5,6 +5,12 @@
 #include <QMainWindow>
 #include <QRegExpValidator>
 
+enum DB
+{
+  SQLITE,
+  POSTGRESQL
+};
+
 namespace Ui {
   class MainWindow;
 }
@@ -24,8 +30,9 @@ class MainWindow : public QMainWindow {
 
   private:
     Ui::MainWindow *ui;
-    QLabel *dbtype;
+    QLabel *label_dbtype;
     QLabel *user;
+    DB DBtype;
 
 };
 
