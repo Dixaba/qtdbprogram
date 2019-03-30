@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
   user = new QLabel(this);
   ui->statusBar->addPermanentWidget(user);
   ui->statusBar->addPermanentWidget(label_dbtype);
-  QString IPBlock = QStringLiteral("(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])");
+  QString IPBlock = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]";
   ui->serverIP->setValidator(new QRegExpValidator(QRegExp(
                                IPBlock + "\\." + IPBlock + "\\." + IPBlock + "\\." + IPBlock
                              )));
@@ -70,7 +70,7 @@ void MainWindow::on_serverDB_currentIndexChanged(int index)
 
 void MainWindow::on_buttonConnect_clicked()
 {
-  DBtype = (DB)ui->serverDB->currentIndex();
+  DBtype = static_cast<DB>(ui->serverDB->currentIndex());
 
   if (
     (
