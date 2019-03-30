@@ -73,12 +73,11 @@ void MainWindow::on_buttonConnect_clicked()
     (
       ui->serverDB->currentIndex() == 0
       && ui->SQLiteFile->text().length() > 0
-    )
-    ||
-    (ui->serverDB->currentIndex() > 0
-     && ui->serverIP->hasAcceptableInput()
-     && ui->serverUser->hasAcceptableInput()
-     && ui->serverPass->text().length() > 0
+    ) || (
+      ui->serverDB->currentIndex() > 0
+      && ui->serverIP->hasAcceptableInput()
+      && ui->serverUser->hasAcceptableInput()
+      && ui->serverPass->text().length() > 0
     )
   )
     { QMessageBox::information(this, "Всё норм", "Типа пытаюсь подключиться"); }
