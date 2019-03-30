@@ -40,8 +40,9 @@ class MainWindow : public QMainWindow {
     QString serverIP, serverPort, serverUser, serverPass, SQLiteFile;
     QString DBUser, DBPass, DBName, DBSurname;
 
-    void updateDBLabel();
     void logout();
+    void disconnect();
+    void updateDBLabel();
     void updateUserLabel();
 
 };

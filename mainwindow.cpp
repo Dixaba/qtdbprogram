@@ -163,8 +163,7 @@ void MainWindow::on_actionDisconnect_triggered()
       QMessageBox::information(this, "Всё норм",
                                "Типа отключился от базы данных");
       logout();
-      DBtype = DB::NOTCONNECTED;
-      updateDBLabel();
+      disconnect();
       ui->pages->setCurrentIndex(0);
     }
 }
@@ -179,6 +178,18 @@ void MainWindow::on_actionLogout_triggered()
       logout();
       ui->pages->setCurrentIndex(1);
     }
+}
+
+void MainWindow::logout()
+{
+  DBUser = DBPass = DBName = DBSurname = "";
+  updateUserLabel();
+}
+
+void MainWindow::disconnect()
+{
+  DBtype = DB::NOTCONNECTED;
+  updateDBLabel();
 }
 
 void MainWindow::updateDBLabel()
@@ -220,12 +231,6 @@ void MainWindow::updateDBLabel()
 
   label_dbtype->setText(DBText);
   label_dbtype->setToolTip(DBToolTip);
-}
-
-void MainWindow::logout()
-{
-  DBUser = DBPass = DBName = DBSurname = "";
-  updateUserLabel();
 }
 
 void MainWindow::updateUserLabel()
