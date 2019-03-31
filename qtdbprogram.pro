@@ -16,3 +16,6 @@ HEADERS  += \
 
 FORMS    += \
          mainwindow.ui
+
+RESOURCES += \
+    translations.qrc
