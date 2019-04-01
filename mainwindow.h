@@ -5,13 +5,10 @@
 #include <QMainWindow>
 #include <QRegExpValidator>
 
+#include "dbrequest.h"
+
 //TODO DB wrapper
-enum DB
-{
-  SQLITE,
-  POSTGRESQL,
-  NOTCONNECTED
-};
+
 
 namespace Ui {
   class MainWindow;
@@ -42,6 +39,7 @@ class MainWindow : public QMainWindow {
     DB DBtype = DB::NOTCONNECTED;
     QString serverIP, serverPort, serverUser, serverPass, SQLiteFile;
     QString DBUser, DBPass, DBName, DBSurname;
+    DBRequest dbr;
 
     void logout();
     void disconnect();

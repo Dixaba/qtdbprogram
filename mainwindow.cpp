@@ -218,7 +218,7 @@ void MainWindow::updateUserLabel()
   label_user->setText(QString("%1 %2").arg(DBSurname, DBName));
 }
 
-
 void MainWindow::closeEvent(QCloseEvent * /*event*/)
 {
+  logout();
 }
