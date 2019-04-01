@@ -16,10 +16,14 @@ class DBRequest {
     DBRequest();
     ~DBRequest();
     bool connect();
+    void setup(DB DBtype, const QString &database, const QString &IP = "",
+               int port = 0, const QString &user = "", const QString &pass = "");
 
   private:
-    QString DBUser, DBPass, DBName, DBSurname;
+    QString IP, user, pass, database;
+    int port;
     QSqlDatabase db;
+    DB DBtype;
 };
 
 #endif // DBREQUEST_H
