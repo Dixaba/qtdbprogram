@@ -7,9 +7,9 @@ int main(int argc, char *argv[])
   QApplication a(argc, argv);
   QTranslator qtTranslator;
   qtTranslator.load("qt_" + QLocale::system().name(),
-                    QString(":/translations"));
-  a.installTranslator(&qtTranslator);
+                    QStringLiteral(":/translations"));
+  QApplication::installTranslator(&qtTranslator);
   MainWindow w;
   w.show();
-  return a.exec();
+  return QApplication::exec();
 }

@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QRegExpValidator>
 
+//TODO DB wrapper
 enum DB
 {
   SQLITE,
@@ -21,7 +22,7 @@ class MainWindow : public QMainWindow {
 
   public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
 
   private slots:
     void on_serverDB_currentIndexChanged(int index);
@@ -36,7 +37,9 @@ class MainWindow : public QMainWindow {
     Ui::MainWindow *ui;
     QLabel *label_dbtype;
     QLabel *label_user;
-    DB DBtype;
+    QRegExpValidator *nameValidator;
+    QRegExpValidator *IPValidator;
+    DB DBtype = DB::NOTCONNECTED;
     QString serverIP, serverPort, serverUser, serverPass, SQLiteFile;
     QString DBUser, DBPass, DBName, DBSurname;
 
@@ -45,6 +48,8 @@ class MainWindow : public QMainWindow {
     void updateDBLabel();
     void updateUserLabel();
 
+  protected:
+    void closeEvent(QCloseEvent * /*event*/) override;
 };
 
 #endif // MAINWINDOW_H

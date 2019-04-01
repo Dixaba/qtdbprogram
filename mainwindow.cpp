@@ -15,8 +15,10 @@ MainWindow::MainWindow(QWidget *parent) :
   label_dbtype = new QLabel(this);
   label_dbtype->setMinimumSize(80, 0);
   label_dbtype->setIndent(15);
-  label_dbtype->setSizePolicy(QSizePolicy(QSizePolicy::Fixed,
-                                          QSizePolicy::Preferred));
+  label_dbtype->setSizePolicy(QSizePolicy(
+                                QSizePolicy::Fixed,
+                                QSizePolicy::Preferred
+                              ));
   label_dbtype->addAction(ui->actionDisconnect);
   label_dbtype->setContextMenuPolicy(Qt::ActionsContextMenu);
   label_user = new QLabel(this);
@@ -24,17 +26,18 @@ MainWindow::MainWindow(QWidget *parent) :
   label_user->setContextMenuPolicy(Qt::ActionsContextMenu);
   ui->statusBar->addPermanentWidget(label_user);
   ui->statusBar->addPermanentWidget(label_dbtype);
-  QString IPBlock = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
-  ui->serverIP->setValidator(new QRegExpValidator(QRegExp(
-                               IPBlock + "\\." + IPBlock + "\\." + IPBlock + "\\." + IPBlock
-                             )));
-  auto validator = new QRegExpValidator(QRegExp(
-                                          "[a-z][a-z0-9]*",
-                                          Qt::CaseInsensitive
-                                        ));
-  ui->serverUser->setValidator(validator);
-  ui->loginUser->setValidator(validator);
-  ui->registerUser->setValidator(validator);
+  QString IPBlock = QStringLiteral("(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])");
+  IPValidator = new QRegExpValidator(QRegExp(
+                                       IPBlock + "\\." + IPBlock + "\\." + IPBlock + "\\." + IPBlock
+                                     ), this);
+  ui->serverIP->setValidator(IPValidator);
+  nameValidator = new QRegExpValidator(QRegExp(
+                                         "[a-z][a-z0-9]*",
+                                         Qt::CaseInsensitive
+                                       ), this);
+  ui->serverUser->setValidator(nameValidator);
+  ui->loginUser->setValidator(nameValidator);
+  ui->registerUser->setValidator(nameValidator);
   on_serverDB_currentIndexChanged(0);
 }
 
@@ -43,37 +46,20 @@ MainWindow::~MainWindow()
   delete ui;
 }
 
-
 void MainWindow::on_serverDB_currentIndexChanged(int index)
 {
-  if (index == 0)
-    {
-      ui->label_serverIP->hide();
-      ui->label_serverPort->hide();
-      ui->label_serverUser->hide();
-      ui->label_serverPass->hide();
-      ui->serverIP->hide();
-      ui->serverPort->hide();
-      ui->serverUser->hide();
-      ui->serverPass->hide();
-      ui->label_SQLite->show();
-      ui->SQLiteFile->show();
-      ui->SQLiteSelectFile->show();
-    }
-  else
-    {
-      ui->label_serverIP->show();
-      ui->label_serverPort->show();
-      ui->label_serverUser->show();
-      ui->label_serverPass->show();
-      ui->serverIP->show();
-      ui->serverPort->show();
-      ui->serverUser->show();
-      ui->serverPass->show();
-      ui->label_SQLite->hide();
-      ui->SQLiteFile->hide();
-      ui->SQLiteSelectFile->hide();
-    }
+  bool isSQLite = index == 0;
+  ui->label_serverIP->setVisible(!isSQLite);
+  ui->label_serverPort->setVisible(!isSQLite);
+  ui->label_serverUser->setVisible(!isSQLite);
+  ui->label_serverPass->setVisible(!isSQLite);
+  ui->serverIP->setVisible(!isSQLite);
+  ui->serverPort->setVisible(!isSQLite);
+  ui->serverUser->setVisible(!isSQLite);
+  ui->serverPass->setVisible(!isSQLite);
+  ui->label_SQLite->setVisible(isSQLite);
+  ui->SQLiteFile->setVisible(isSQLite);
+  ui->SQLiteSelectFile->setVisible(isSQLite);
 }
 
 void MainWindow::on_buttonConnect_clicked()
@@ -81,19 +67,15 @@ void MainWindow::on_buttonConnect_clicked()
   DBtype = static_cast<DB>(ui->serverDB->currentIndex());
 
   if (
-    (
-      DBtype == DB::SQLITE
-      && ui->SQLiteFile->text().length() > 0
-    ) || (
-      DBtype != DB::SQLITE
-      && ui->serverIP->hasAcceptableInput()
-      && ui->serverUser->hasAcceptableInput()
-      && ui->serverPass->text().length() > 0
-    )
+    (DBtype == DB::SQLITE
+     && ui->SQLiteFile->text().length() > 0)
+    ||
+    (DBtype != DB::SQLITE
+     && ui->serverIP->hasAcceptableInput()
+     && ui->serverUser->hasAcceptableInput()
+     && ui->serverPass->text().length() > 0)
   )
     {
-      QMessageBox::information(this, "Всё норм",
-                               "Типа пытаюсь подключиться");
       serverIP = ui->serverIP->text();
       serverPort = ui->serverPort->text();
       serverUser = ui->serverUser->text();
@@ -101,14 +83,13 @@ void MainWindow::on_buttonConnect_clicked()
       ui->pages->setCurrentIndex(1);
     }
   else
-    { QMessageBox::critical(this, "Ошибка", "Указаны неверные параметры подключения"); }
+    { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Указаны неверные параметры подключения")); }
 }
 
 void MainWindow::on_SQLiteSelectFile_clicked()
 {
-  QMessageBox::information(this, "Всё норм",
-                           "Типа выбор файла");
   ui->SQLiteFile->setText("Типа имя файла");
+  //TODO open file
 }
 
 void MainWindow::on_buttonLogin_clicked()
@@ -118,9 +99,7 @@ void MainWindow::on_buttonLogin_clicked()
     && ui->loginPass->text().length() > 0
   )
     {
-      QMessageBox::information(this, "Всё норм",
-                               "Типа вошёл в систему");
-      label_user->setText("Обналиченный Воробушек");
+      //TODO DB login
       DBUser = ui->loginUser->text();
       DBPass = ui->loginPass->text();
       DBName = "Воробушек";
@@ -129,7 +108,7 @@ void MainWindow::on_buttonLogin_clicked()
       ui->pages->setCurrentIndex(2);
     }
   else
-    { QMessageBox::critical(this, "Ошибка", "Не указано имя пользователя или пароль"); }
+    { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Не указано имя пользователя или пароль")); }
 }
 
 void MainWindow::on_buttonRegister_clicked()
@@ -142,8 +121,7 @@ void MainWindow::on_buttonRegister_clicked()
     && ui->registerSurname->text().length() > 0
   )
     {
-      QMessageBox::information(this, "Всё норм",
-                               "Типа зарегистрировался и вошёл");
+      //TODO DB regiter user
       DBUser = ui->registerUser->text();
       DBPass = ui->registerPass->text();
       DBName = ui->registerName->text();
@@ -152,16 +130,15 @@ void MainWindow::on_buttonRegister_clicked()
       ui->pages->setCurrentIndex(2);
     }
   else
-    { QMessageBox::critical(this, "Ошибка", "Заполнены не все поля или пароли не совпадают"); }
+    { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Заполнены не все поля или пароли не совпадают")); }
 }
 
 void MainWindow::on_actionDisconnect_triggered()
 {
-  if (QMessageBox::question(this, "Эээ?",
-                            "Отключиться от базы данных?") == QMessageBox::Yes)
+  if (QMessageBox::question(this, QStringLiteral("Эээ?"),
+                            QStringLiteral("Отключиться от базы данных?")) ==
+      QMessageBox::Yes)
     {
-      QMessageBox::information(this, "Всё норм",
-                               "Типа отключился от базы данных");
       logout();
       disconnect();
       ui->pages->setCurrentIndex(0);
@@ -170,11 +147,9 @@ void MainWindow::on_actionDisconnect_triggered()
 
 void MainWindow::on_actionLogout_triggered()
 {
-  if (QMessageBox::question(this, "Эээ?",
-                            "Выйти из системы?") == QMessageBox::Yes)
+  if (QMessageBox::question(this, QStringLiteral("Эээ?"),
+                            QStringLiteral("Выйти из системы?")) == QMessageBox::Yes)
     {
-      QMessageBox::information(this, "Всё норм",
-                               "Типа вышел из системы");
       logout();
       ui->pages->setCurrentIndex(1);
     }
@@ -182,12 +157,17 @@ void MainWindow::on_actionLogout_triggered()
 
 void MainWindow::logout()
 {
-  DBUser = DBPass = DBName = DBSurname = "";
+  //TODO logout
+  DBUser.clear();
+  DBPass.clear();
+  DBName.clear();
+  DBSurname.clear();
   updateUserLabel();
 }
 
 void MainWindow::disconnect()
 {
+  //TODO disconnect
   DBtype = DB::NOTCONNECTED;
   updateDBLabel();
 }
@@ -223,8 +203,8 @@ void MainWindow::updateDBLabel()
 
       case DB::NOTCONNECTED:
       {
-        DBText = "";
-        DBToolTip = "";
+        DBText.clear();
+        DBToolTip.clear();
         break;
       }
     }
@@ -236,4 +216,9 @@ void MainWindow::updateDBLabel()
 void MainWindow::updateUserLabel()
 {
   label_user->setText(QString("%1 %2").arg(DBSurname, DBName));
+}
+
+
+void MainWindow::closeEvent(QCloseEvent * /*event*/)
+{
 }
