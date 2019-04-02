@@ -18,12 +18,16 @@ class DBRequest {
     bool connect();
     void setup(DB DBtype, const QString &database, const QString &IP = "",
                int port = 0, const QString &user = "", const QString &pass = "");
+    QString getDBname();
+    QString getDBconnection();
 
   private:
     QString IP, user, pass, database;
-    int port;
+    int port = 0;
     QSqlDatabase db;
-    DB DBtype;
+    DB DBtype = DB::NOTCONNECTED;
+
+    const QString connection = QStringLiteral("connection1");
 };
 
 #endif // DBREQUEST_H

@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -174,51 +176,16 @@ void MainWindow::disconnect()
 
 void MainWindow::updateDBLabel()
 {
-  QString DBText, DBToolTip;
-
-  switch (DBtype)
-    {
-      case DB::SQLITE:
-      {
-        DBText = "SQLite";
-        DBToolTip = "Имя файла: " + ui->SQLiteFile->text();
-        break;
-      }
-
-      case DB::POSTGRESQL:
-      {
-        DBText = "PostgreSQL";
-        QString dbname(
-          "Адрес сервера: %1\n"
-          "Порт сервера: %2\n"
-          "Имя пользователя: %3"
-        );
-        DBToolTip = dbname.arg(
-                      serverIP,
-                      serverPort,
-                      serverUser
-                    );
-        break;
-      }
-
-      case DB::NOTCONNECTED:
-      {
-        DBText.clear();
-        DBToolTip.clear();
-        break;
-      }
-    }
-
-  label_dbtype->setText(DBText);
-  label_dbtype->setToolTip(DBToolTip);
+  label_dbtype->setText(dbr.getDBname());
+  label_dbtype->setToolTip(dbr.getDBconnection());
 }
 
 void MainWindow::updateUserLabel()
 {
-  label_user->setText(QString("%1 %2").arg(DBSurname, DBName));
+  label_user->setText(QStringLiteral("%1 %2").arg(DBSurname, DBName));
 }
 
-void MainWindow::closeEvent(QCloseEvent * /*event*/)
+void MainWindow::closeEvent(QCloseEvent */*event*/)
 {
   logout();
 }
