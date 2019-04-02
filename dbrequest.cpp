@@ -2,13 +2,14 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 #include "dbrequest.h"
 
+#include <QMessageBox>
+
 DBRequest::DBRequest() = default;
 
 DBRequest::~DBRequest() = default;
 
 bool DBRequest::connect()
 {
-  QSqlDatabase::removeDatabase(connection);
   QString driver;
 
   switch (DBtype)
@@ -31,7 +32,7 @@ bool DBRequest::connect()
       }
     }
 
-  db = QSqlDatabase::addDatabase(driver, connection);
+  QSqlDatabase db = QSqlDatabase::addDatabase(driver, connection);
   db.setDatabaseName(database);
   db.setHostName(IP);
   db.setPort(port);
@@ -41,8 +42,21 @@ bool DBRequest::connect()
   if (!db.open())
     { return false; }
 
-  QStringList tables = db.tables();
-  return true;
+  //  QSqlQuery q(db);
+  return QSqlQuery(db).exec(QStringLiteral(
+                              "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, login VARCHAR, pass VARCHAR, name VARCHAR, surname VARCHAR);"
+                              "CREATE TABLE IF NOT EXISTS points(id INTEGER PRIMARY KEY, latitude REAL, longitude REAL, ismaster BOOLEAN);"
+                            ));
+}
+
+void DBRequest::disconnect()
+{
+  {
+    QSqlDatabase db = QSqlDatabase::database(connection);
+    db.close();
+  }
+  this->DBtype = DB::NOTCONNECTED;
+  QSqlDatabase::removeDatabase(connection);
 }
 
 void DBRequest::setup(DB DBtype, const QString &database, const QString &IP,
@@ -106,4 +120,3 @@ QString DBRequest::getDBconnection()
       }
     }
 }
-

@@ -78,11 +78,22 @@ void MainWindow::on_buttonConnect_clicked()
      && ui->serverPass->text().length() > 0)
   )
     {
-      serverIP = ui->serverIP->text();
-      serverPort = ui->serverPort->text();
-      serverUser = ui->serverUser->text();
-      updateDBLabel();
-      ui->pages->setCurrentIndex(1);
+      dbr.setup(
+        DBtype,
+        (DBtype == DB::SQLITE) ? ui->SQLiteFile->text() : "qtdbprogram",
+        ui->serverIP->text(),
+        ui->serverPort->text().toInt(),
+        ui->serverUser->text(),
+        ui->serverPass->text()
+      );
+
+      if (dbr.connect())
+        {
+          updateDBLabel();
+          ui->pages->setCurrentIndex(1);
+        }
+      else
+        { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Не удалось подключиться к БД")); }
     }
   else
     { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Указаны неверные параметры подключения")); }
@@ -171,6 +182,7 @@ void MainWindow::disconnect()
 {
   //TODO disconnect
   DBtype = DB::NOTCONNECTED;
+  dbr.disconnect();
   updateDBLabel();
 }
 
@@ -187,5 +199,5 @@ void MainWindow::updateUserLabel()
 
 void MainWindow::closeEvent(QCloseEvent */*event*/)
 {
-  logout();
+  disconnect();
 }

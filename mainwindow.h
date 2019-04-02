@@ -37,7 +37,6 @@ class MainWindow : public QMainWindow {
     QRegExpValidator *nameValidator;
     QRegExpValidator *IPValidator;
     DB DBtype = DB::NOTCONNECTED;
-    QString serverIP, serverPort, serverUser, serverPass, SQLiteFile;
     QString DBUser, DBPass, DBName, DBSurname;
     DBRequest dbr;
 

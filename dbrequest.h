@@ -16,6 +16,7 @@ class DBRequest {
     DBRequest();
     ~DBRequest();
     bool connect();
+    void disconnect();
     void setup(DB DBtype, const QString &database, const QString &IP = "",
                int port = 0, const QString &user = "", const QString &pass = "");
     QString getDBname();
@@ -24,7 +25,6 @@ class DBRequest {
   private:
     QString IP, user, pass, database;
     int port = 0;
-    QSqlDatabase db;
     DB DBtype = DB::NOTCONNECTED;
 
     const QString connection = QStringLiteral("connection1");

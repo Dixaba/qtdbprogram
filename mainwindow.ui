@@ -108,7 +108,11 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="serverIP"/>
+            <widget class="QLineEdit" name="serverIP">
+             <property name="text">
+              <string>127.0.0.1</string>
+             </property>
+            </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_serverPort">
@@ -129,7 +133,7 @@
               <number>65535</number>
              </property>
              <property name="value">
-              <number>1024</number>
+              <number>5432</number>
              </property>
             </widget>
            </item>
@@ -145,6 +149,9 @@
            </item>
            <item row="3" column="1">
             <widget class="QLineEdit" name="serverUser">
+             <property name="text">
+              <string>postgres</string>
+             </property>
              <property name="maxLength">
               <number>255</number>
              </property>
