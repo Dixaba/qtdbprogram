@@ -19,14 +19,14 @@ class DBRequest {
     void disconnect();
     void setup(DB DBtype, const QString &database, const QString &IP = "",
                int port = 0, const QString &user = "", const QString &pass = "");
-    QString getDBname();
+    QString getDBname() const;
     QString getDBconnection();
-    QSqlRelationalTableModel *getModel();
+    QSqlTableModel *getModel();
     bool login(const QString &login, const QString &pass);
     bool regIster(const QString &login, const QString &pass, const QString &name,
                   const QString &surname);
-    QString getName();
-    QString getSurname();
+    QString getName() const;
+    QString getSurname() const;
 
   private:
     QString IP, user, pass, database, name, surname;

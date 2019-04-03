@@ -75,7 +75,7 @@ void DBRequest::setup(DB DBtype, const QString &database, const QString &IP,
   this->pass = pass;
 }
 
-QString DBRequest::getDBname()
+QString DBRequest::getDBname() const
 {
   switch (DBtype)
     {
@@ -126,11 +126,11 @@ QString DBRequest::getDBconnection()
     }
 }
 
-QSqlRelationalTableModel *DBRequest::getModel()
+QSqlTableModel *DBRequest::getModel()
 {
-  auto model = new QSqlRelationalTableModel(nullptr,
-      QSqlDatabase::database(connection));
-  model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+  auto model = new QSqlTableModel(nullptr,
+                                  QSqlDatabase::database(connection));
+  model->setEditStrategy(QSqlTableModel::OnRowChange);
   model->setTable("points");
   model->setHeaderData(model->fieldIndex("longitude"), Qt::Horizontal,
                        "Широта");
@@ -181,12 +181,12 @@ bool DBRequest::regIster(const QString &login, const QString &pass,
   return false;
 }
 
-QString DBRequest::getName()
+QString DBRequest::getName() const
 {
   return name;
 }
 
-QString DBRequest::getSurname()
+QString DBRequest::getSurname() const
 {
   return surname;
 }

@@ -241,8 +241,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>666</width>
-             <height>391</height>
+             <width>425</width>
+             <height>140</height>
             </rect>
            </property>
            <attribute name="label">
@@ -356,8 +356,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>666</width>
-             <height>391</height>
+             <width>346</width>
+             <height>224</height>
             </rect>
            </property>
            <attribute name="label">
@@ -534,9 +534,16 @@
        </layout>
       </widget>
       <widget class="QWidget" name="pageWork">
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="1" column="0">
          <widget class="QTableView" name="tableView"/>
+        </item>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Фильтры</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

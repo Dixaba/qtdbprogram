@@ -43,7 +43,7 @@ class MainWindow : public QMainWindow {
     DB DBtype = DB::NOTCONNECTED;
     QString DBUser, DBPass, DBName, DBSurname;
     DBRequest dbr;
-    QSqlRelationalTableModel *model;
+    QSqlTableModel *model;
 
 
   protected:
