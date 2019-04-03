@@ -204,6 +204,7 @@ void MainWindow::logout()
 void MainWindow::disconnect()
 {
   DBtype = DB::NOTCONNECTED;
+  logout();
   dbr.disconnect();
   updateDBLabel();
 }
@@ -229,14 +230,6 @@ void MainWindow::setupModel()
 {
   model = dbr.getModel();
   model->setParent(ui->tableView);
-  model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-  model->setTable("points");
-  model->setHeaderData(model->fieldIndex("longitude"), Qt::Horizontal,
-                       "Широта");
-  model->setHeaderData(model->fieldIndex("latitude"), Qt::Horizontal,
-                       "Долгота");
-  model->setHeaderData(model->fieldIndex("ismaster"), Qt::Horizontal,
-                       "Ведущая");
 
   if (!model->select())
     {
@@ -245,8 +238,8 @@ void MainWindow::setupModel()
     }
 
   ui->tableView->setModel(model);
-  //  ui->tableView->setItemDelegate(new BookDelegate(ui.bookTable));
-  ui->tableView->setColumnHidden(model->fieldIndex("id"), true);
+  ui->tableView->setItemDelegate(new DBDelegate(ui->tableView));
+  ui->tableView->setColumnHidden(0, true);
   ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
   ui->tableView->setCurrentIndex(model->index(0, 0));
 }

@@ -6,6 +6,7 @@
 #include <QRegExpValidator>
 
 #include "dbrequest.h"
+#include "dbdelegate.h"
 
 namespace Ui {
   class MainWindow;

@@ -128,8 +128,17 @@ QString DBRequest::getDBconnection()
 
 QSqlRelationalTableModel *DBRequest::getModel()
 {
-  return new QSqlRelationalTableModel(nullptr,
-                                      QSqlDatabase::database(connection));
+  auto model = new QSqlRelationalTableModel(nullptr,
+      QSqlDatabase::database(connection));
+  model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+  model->setTable("points");
+  model->setHeaderData(model->fieldIndex("longitude"), Qt::Horizontal,
+                       "Широта");
+  model->setHeaderData(model->fieldIndex("latitude"), Qt::Horizontal,
+                       "Долгота");
+  model->setHeaderData(model->fieldIndex("ismaster"), Qt::Horizontal,
+                       "Ведущая");
+  return model;
 }
 
 bool DBRequest::login(const QString &login, const QString &pass)

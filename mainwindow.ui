@@ -241,8 +241,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>425</width>
-             <height>140</height>
+             <width>666</width>
+             <height>391</height>
             </rect>
            </property>
            <attribute name="label">
@@ -356,8 +356,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>346</width>
-             <height>224</height>
+             <width>666</width>
+             <height>391</height>
             </rect>
            </property>
            <attribute name="label">
@@ -573,7 +573,19 @@
   <tabstop>serverPort</tabstop>
   <tabstop>serverUser</tabstop>
   <tabstop>serverPass</tabstop>
+  <tabstop>SQLiteFile</tabstop>
+  <tabstop>SQLiteSelectFile</tabstop>
   <tabstop>buttonConnect</tabstop>
+  <tabstop>loginUser</tabstop>
+  <tabstop>loginPass</tabstop>
+  <tabstop>buttonLogin</tabstop>
+  <tabstop>registerUser</tabstop>
+  <tabstop>registerPass</tabstop>
+  <tabstop>registerPassRepeat</tabstop>
+  <tabstop>registerName</tabstop>
+  <tabstop>registerSurname</tabstop>
+  <tabstop>buttonRegister</tabstop>
+  <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>
  <connections/>
