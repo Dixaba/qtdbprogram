@@ -7,9 +7,6 @@
 
 #include "dbrequest.h"
 
-//TODO DB wrapper
-
-
 namespace Ui {
   class MainWindow;
 }
@@ -31,6 +28,12 @@ class MainWindow : public QMainWindow {
     void on_actionLogout_triggered();
 
   private:
+    void logout();
+    void disconnect();
+    void updateDBLabel();
+    void updateUserLabel(bool local);
+    void setupModel();
+
     Ui::MainWindow *ui;
     QLabel *label_dbtype;
     QLabel *label_user;
@@ -39,11 +42,8 @@ class MainWindow : public QMainWindow {
     DB DBtype = DB::NOTCONNECTED;
     QString DBUser, DBPass, DBName, DBSurname;
     DBRequest dbr;
+    QSqlRelationalTableModel *model;
 
-    void logout();
-    void disconnect();
-    void updateDBLabel();
-    void updateUserLabel();
 
   protected:
     void closeEvent(QCloseEvent * /*event*/) override;

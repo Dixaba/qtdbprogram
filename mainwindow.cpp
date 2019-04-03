@@ -8,6 +8,7 @@
 #include <QtMath>
 #include <QRandomGenerator>
 #include <QMessageBox>
+#include <QCryptographicHash>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -80,7 +81,7 @@ void MainWindow::on_buttonConnect_clicked()
     {
       dbr.setup(
         DBtype,
-        (DBtype == DB::SQLITE) ? ui->SQLiteFile->text() : "qtdbprogram",
+        (DBtype == DB::SQLITE) ? ui->SQLiteFile->text() : QStringLiteral("qtdbprogram"),
         ui->serverIP->text(),
         ui->serverPort->text().toInt(),
         ui->serverUser->text(),
@@ -112,13 +113,23 @@ void MainWindow::on_buttonLogin_clicked()
     && ui->loginPass->text().length() > 0
   )
     {
-      //TODO DB login
       DBUser = ui->loginUser->text();
-      DBPass = ui->loginPass->text();
-      DBName = "Воробушек";
-      DBSurname = "Накормленный";
-      updateUserLabel();
-      ui->pages->setCurrentIndex(2);
+      DBPass = QString(
+                 QCryptographicHash::hash(
+                   ui->loginPass->text().toUtf8(),
+                   QCryptographicHash::Md5
+                 ).toHex()
+               );
+
+      if (dbr.login(DBUser, DBPass))
+        {
+          updateUserLabel(false);
+          setupModel();
+          ui->pages->setCurrentIndex(2);
+        }
+      else
+        QMessageBox::critical(this, QStringLiteral("Ошибка"),
+                              QStringLiteral("Указано неверное имя пользователя или пароль"));
     }
   else
     { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Не указано имя пользователя или пароль")); }
@@ -134,13 +145,25 @@ void MainWindow::on_buttonRegister_clicked()
     && ui->registerSurname->text().length() > 0
   )
     {
-      //TODO DB regiter user
       DBUser = ui->registerUser->text();
-      DBPass = ui->registerPass->text();
+      DBPass = QString(
+                 QCryptographicHash::hash(
+                   ui->registerPass->text().toUtf8(),
+                   QCryptographicHash::Md5
+                 ).toHex()
+               );
       DBName = ui->registerName->text();
       DBSurname = ui->registerSurname->text();
-      updateUserLabel();
-      ui->pages->setCurrentIndex(2);
+
+      if (dbr.regIster(DBUser, DBPass, DBName, DBSurname))
+        {
+          updateUserLabel(true);
+          setupModel();
+          ui->pages->setCurrentIndex(2);
+        }
+      else
+        QMessageBox::critical(this, QStringLiteral("Ошибка"),
+                              QStringLiteral("Не удалось зарегистрировать пользователя"));
     }
   else
     { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Заполнены не все поля или пароли не совпадают")); }
@@ -170,17 +193,16 @@ void MainWindow::on_actionLogout_triggered()
 
 void MainWindow::logout()
 {
-  //TODO logout
   DBUser.clear();
   DBPass.clear();
   DBName.clear();
   DBSurname.clear();
-  updateUserLabel();
+  updateUserLabel(true);
+  delete model;
 }
 
 void MainWindow::disconnect()
 {
-  //TODO disconnect
   DBtype = DB::NOTCONNECTED;
   dbr.disconnect();
   updateDBLabel();
@@ -192,9 +214,41 @@ void MainWindow::updateDBLabel()
   label_dbtype->setToolTip(dbr.getDBconnection());
 }
 
-void MainWindow::updateUserLabel()
+void MainWindow::updateUserLabel(bool local)
 {
+  if (!local)
+    {
+      DBName = dbr.getName();
+      DBSurname = dbr.getSurname();
+    }
+
   label_user->setText(QStringLiteral("%1 %2").arg(DBSurname, DBName));
+}
+
+void MainWindow::setupModel()
+{
+  model = dbr.getModel();
+  model->setParent(ui->tableView);
+  model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+  model->setTable("points");
+  model->setHeaderData(model->fieldIndex("longitude"), Qt::Horizontal,
+                       "Широта");
+  model->setHeaderData(model->fieldIndex("latitude"), Qt::Horizontal,
+                       "Долгота");
+  model->setHeaderData(model->fieldIndex("ismaster"), Qt::Horizontal,
+                       "Ведущая");
+
+  if (!model->select())
+    {
+      QTextStream(stdout) << model->lastError().text();
+      return;
+    }
+
+  ui->tableView->setModel(model);
+  //  ui->tableView->setItemDelegate(new BookDelegate(ui.bookTable));
+  ui->tableView->setColumnHidden(model->fieldIndex("id"), true);
+  ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+  ui->tableView->setCurrentIndex(model->index(0, 0));
 }
 
 void MainWindow::closeEvent(QCloseEvent */*event*/)

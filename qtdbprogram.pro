@@ -10,11 +10,13 @@ CONFIG    += c++11
 SOURCES   += \
           main.cpp \
           mainwindow.cpp \
-          dbrequest.cpp
+          dbrequest.cpp \
+    dbdelegate.cpp
 
 HEADERS   += \
           mainwindow.h \
-          dbrequest.h
+          dbrequest.h \
+    dbdelegate.h
 
 FORMS     += \
           mainwindow.ui

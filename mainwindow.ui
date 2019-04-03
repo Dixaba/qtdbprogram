@@ -534,24 +534,11 @@
        </layout>
       </widget>
       <widget class="QWidget" name="pageWork">
-       <widget class="QLabel" name="label_5">
-        <property name="geometry">
-         <rect>
-          <x>100</x>
-          <y>220</y>
-          <width>431</width>
-          <height>42</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>26</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Тут таблички, все дела</string>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QTableView" name="tableView"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
