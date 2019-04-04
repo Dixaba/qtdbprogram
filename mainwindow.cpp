@@ -201,6 +201,12 @@ void MainWindow::DBlogout()
       delete model;
       model = nullptr;
     }
+
+  if (proxyModel != nullptr)
+    {
+      delete proxyModel;
+      proxyModel = nullptr;
+    }
 }
 
 void MainWindow::DBdisconnect()
@@ -239,7 +245,9 @@ void MainWindow::setupModel()
       return;
     }
 
-  ui->tableView->setModel(model);
+  proxyModel = new QSortFilterProxyModel;
+  proxyModel->setSourceModel(model);
+  ui->tableView->setModel(proxyModel);
   ui->tableView->setItemDelegate(new DBDelegate(ui->tableView));
   ui->tableView->setColumnHidden(0, true);
   ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);

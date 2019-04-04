@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>702</width>
+    <width>513</width>
     <height>553</height>
    </rect>
   </property>
@@ -36,7 +36,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Добро пожаловать в какую-то хз прогу</string>
+           <string>Добро пожаловать</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -536,7 +536,11 @@
       <widget class="QWidget" name="pageWork">
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <widget class="QTableView" name="tableView"/>
+         <widget class="QTableView" name="tableView">
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

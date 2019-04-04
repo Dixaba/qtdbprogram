@@ -44,6 +44,7 @@ class MainWindow : public QMainWindow {
     QString DBUser, DBPass, DBName, DBSurname;
     DBRequest dbr;
     QSqlTableModel *model = nullptr;
+    QSortFilterProxyModel *proxyModel = nullptr;
 
 
   protected:
