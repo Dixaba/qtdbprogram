@@ -128,8 +128,7 @@ void MainWindow::on_buttonLogin_clicked()
           ui->pages->setCurrentIndex(2);
         }
       else
-        QMessageBox::critical(this, QStringLiteral("Ошибка"),
-                              QStringLiteral("Указано неверное имя пользователя или пароль"));
+        { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Указано неверное имя пользователя или пароль")); }
     }
   else
     { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Не указано имя пользователя или пароль")); }
@@ -162,8 +161,7 @@ void MainWindow::on_buttonRegister_clicked()
           ui->pages->setCurrentIndex(2);
         }
       else
-        QMessageBox::critical(this, QStringLiteral("Ошибка"),
-                              QStringLiteral("Не удалось зарегистрировать пользователя"));
+        { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Не удалось зарегистрировать пользователя")); }
     }
   else
     { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Заполнены не все поля или пароли не совпадают")); }
@@ -175,8 +173,7 @@ void MainWindow::on_actionDisconnect_triggered()
                             QStringLiteral("Отключиться от базы данных?")) ==
       QMessageBox::Yes)
     {
-      logout();
-      disconnect();
+      DBdisconnect();
       ui->pages->setCurrentIndex(0);
     }
 }
@@ -186,25 +183,30 @@ void MainWindow::on_actionLogout_triggered()
   if (QMessageBox::question(this, QStringLiteral("Эээ?"),
                             QStringLiteral("Выйти из системы?")) == QMessageBox::Yes)
     {
-      logout();
+      DBlogout();
       ui->pages->setCurrentIndex(1);
     }
 }
 
-void MainWindow::logout()
+void MainWindow::DBlogout()
 {
   DBUser.clear();
   DBPass.clear();
   DBName.clear();
   DBSurname.clear();
   updateUserLabel(true);
-  delete model;
+
+  if (model != nullptr)
+    {
+      delete model;
+      model = nullptr;
+    }
 }
 
-void MainWindow::disconnect()
+void MainWindow::DBdisconnect()
 {
   DBtype = DB::NOTCONNECTED;
-  logout();
+  DBlogout();
   dbr.disconnect();
   updateDBLabel();
 }
@@ -246,5 +248,5 @@ void MainWindow::setupModel()
 
 void MainWindow::closeEvent(QCloseEvent */*event*/)
 {
-  disconnect();
+  DBdisconnect();
 }

@@ -29,8 +29,8 @@ class MainWindow : public QMainWindow {
     void on_actionLogout_triggered();
 
   private:
-    void logout();
-    void disconnect();
+    void DBlogout();
+    void DBdisconnect();
     void updateDBLabel();
     void updateUserLabel(bool local);
     void setupModel();
@@ -43,7 +43,7 @@ class MainWindow : public QMainWindow {
     DB DBtype = DB::NOTCONNECTED;
     QString DBUser, DBPass, DBName, DBSurname;
     DBRequest dbr;
-    QSqlTableModel *model;
+    QSqlTableModel *model = nullptr;
 
 
   protected:
