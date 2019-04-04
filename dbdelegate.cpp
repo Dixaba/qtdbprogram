@@ -28,15 +28,6 @@ QWidget *DBDelegate::createEditor(QWidget *parent,
         sb->setDecimals(6);
         return sb;
       }
-
-        //      case 3:
-        //      {
-        //        QDoubleSpinBox *sb = new QDoubleSpinBox(parent);
-        //        sb->setMaximum(90);
-        //        sb->setMinimum(-90);
-        //        sb->setDecimals(6);
-        //        return sb;
-        //      }
     }
 
   return QSqlRelationalDelegate::createEditor(parent, option, index);

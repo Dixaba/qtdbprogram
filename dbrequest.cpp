@@ -126,16 +126,18 @@ QSqlRelationalTableModel *DBRequest::getModel()
 {
   auto model = new QSqlRelationalTableModel(nullptr,
       QSqlDatabase::database(connection));
-  model->setEditStrategy(QSqlTableModel::OnRowChange);
+  model->setEditStrategy(QSqlTableModel::OnFieldChange);
   model->setTable("points");
+  model->setRelation(model->fieldIndex("pointtype"), QSqlRelation("pointtypes",
+                     "id", "name"));
   model->setHeaderData(model->fieldIndex("longitude"), Qt::Horizontal,
                        "Широта");
   model->setHeaderData(model->fieldIndex("latitude"), Qt::Horizontal,
                        "Долгота");
-  model->setHeaderData(model->fieldIndex("ismaster"), Qt::Horizontal,
-                       "Ведущая");
-  model->setRelation(model->fieldIndex("ismaster"), QSqlRelation("pointtypes",
-                     "id", "name"));
+  model->setHeaderData(model->fieldIndex("pointtype"), Qt::Horizontal,
+                       "Тип точки");
+  model->setHeaderData(model->fieldIndex("pointtype") + 1, Qt::Horizontal,
+                       "Тsdfsd");
   return model;
 }
 

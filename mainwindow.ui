@@ -241,8 +241,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>425</width>
-             <height>140</height>
+             <width>477</width>
+             <height>391</height>
             </rect>
            </property>
            <attribute name="label">
@@ -356,8 +356,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>346</width>
-             <height>224</height>
+             <width>477</width>
+             <height>391</height>
             </rect>
            </property>
            <attribute name="label">
@@ -534,11 +534,31 @@
        </layout>
       </widget>
       <widget class="QWidget" name="pageWork">
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Фильтры</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QTableView" name="tableView">
           <property name="sortingEnabled">
            <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonAddPoint">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Добавить запись</string>
           </property>
          </widget>
         </item>

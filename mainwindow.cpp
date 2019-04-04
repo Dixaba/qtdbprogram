@@ -94,7 +94,24 @@ void MainWindow::on_buttonConnect_clicked()
           ui->pages->setCurrentIndex(1);
         }
       else
-        { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Не удалось подключиться к БД")); }
+        {
+          QMessageBox msgBox;
+          msgBox.setText("Возможно, указаны неверное имя пользователя или пароль, перепроверьте");
+          msgBox.setWindowTitle("Не удалось подключиться к БД");
+          msgBox.setStandardButtons(QMessageBox::Ok);
+          msgBox.setDefaultButton(QMessageBox::Ok);
+          msgBox.setIcon(QMessageBox::Critical);
+          msgBox.setDetailedText(
+            "Также есть вероятность, что база данных повреждена. Для исправления обратитесь к системному администратору и покажите это сообщение\n\n"
+            "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, login VARCHAR UNIQUE NOT NULL, pass VARCHAR NOT NULL, name VARCHAR NOT NULL, surname VARCHAR NOT NULL);\n"
+            "CREATE TABLE IF NOT EXISTS points(id INTEGER PRIMARY KEY, latitude DECIMAL(9,6) NOT NULL, longitude DECIMAL(9,6) NOT NULL, pointtype INTEGER NOT NULL);\n"
+            "DROP TABLE IF EXISTS pointtypes;\n"
+            "CREATE TABLE pointtypes(id INTEGER PRIMARY KEY NOT NULL, name VARCHAR NOT NULL);\n"
+            "INSERT INTO pointtypes (id, name) VALUES (0, 'Ведущая');\n"
+            "INSERT INTO pointtypes (id, name) VALUES (1, 'Ведомая');\n"
+          );
+          msgBox.exec();
+        }
     }
   else
     { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Указаны неверные параметры подключения")); }
@@ -237,7 +254,6 @@ void MainWindow::updateUserLabel(bool local)
 void MainWindow::setupModel()
 {
   model = dbr.getModel();
-  model->setParent(ui->tableView);
 
   if (!model->select())
     {
@@ -245,9 +261,10 @@ void MainWindow::setupModel()
       return;
     }
 
+  model->setParent(ui->tableView);
   proxyModel = new QSortFilterProxyModel;
   proxyModel->setSourceModel(model);
-  ui->tableView->setModel(proxyModel);
+  ui->tableView->setModel(model);
   ui->tableView->setItemDelegate(new DBDelegate(ui->tableView));
   ui->tableView->setColumnHidden(0, true);
   ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -257,4 +274,9 @@ void MainWindow::setupModel()
 void MainWindow::closeEvent(QCloseEvent */*event*/)
 {
   DBdisconnect();
+}
+
+void MainWindow::on_buttonAddPoint_clicked()
+{
+  model->insertRow(model->rowCount());
 }
