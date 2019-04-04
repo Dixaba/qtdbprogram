@@ -42,15 +42,11 @@ bool DBRequest::connect()
   if (!db.open())
     { return false; }
 
-  QSqlQuery q = QSqlQuery(db);
+  QStringList tables = db.tables();
   bool success = true;
-  success &= q.exec(QStringLiteral(
-                      "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, login VARCHAR UNIQUE, pass VARCHAR, name VARCHAR, surname VARCHAR);"
-                    ));
-  success &= q.exec(QStringLiteral(
-                      "CREATE TABLE IF NOT EXISTS points(id INTEGER PRIMARY KEY, latitude REAL, longitude REAL, ismaster BOOLEAN);"
-                    ));
-  QTextStream(stdout) << q.lastError().text();
+  success &= tables.contains("users");
+  success &= tables.contains("points");
+  success &= tables.contains("pointtypes");
   return success;
 }
 
@@ -126,10 +122,10 @@ QString DBRequest::getDBconnection()
     }
 }
 
-QSqlTableModel *DBRequest::getModel()
+QSqlRelationalTableModel *DBRequest::getModel()
 {
-  auto model = new QSqlTableModel(nullptr,
-                                  QSqlDatabase::database(connection));
+  auto model = new QSqlRelationalTableModel(nullptr,
+      QSqlDatabase::database(connection));
   model->setEditStrategy(QSqlTableModel::OnRowChange);
   model->setTable("points");
   model->setHeaderData(model->fieldIndex("longitude"), Qt::Horizontal,
@@ -138,6 +134,8 @@ QSqlTableModel *DBRequest::getModel()
                        "Долгота");
   model->setHeaderData(model->fieldIndex("ismaster"), Qt::Horizontal,
                        "Ведущая");
+  model->setRelation(model->fieldIndex("ismaster"), QSqlRelation("pointtypes",
+                     "id", "name"));
   return model;
 }
 

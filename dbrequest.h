@@ -21,7 +21,7 @@ class DBRequest {
                int port = 0, const QString &user = "", const QString &pass = "");
     QString getDBname() const;
     QString getDBconnection();
-    QSqlTableModel *getModel();
+    QSqlRelationalTableModel *getModel();
     bool login(const QString &login, const QString &pass);
     bool regIster(const QString &login, const QString &pass, const QString &name,
                   const QString &surname);
