@@ -44,9 +44,9 @@ bool DBRequest::connect()
 
   QStringList tables = db.tables();
   bool success = true;
-  success &= tables.contains("users");
-  success &= tables.contains("points");
-  success &= tables.contains("pointtypes");
+  success &= tables.contains(QStringLiteral("users"));
+  success &= tables.contains(QStringLiteral("points"));
+  success &= tables.contains(QStringLiteral("pointtypes"));
   return success;
 }
 
@@ -103,11 +103,11 @@ QString DBRequest::getDBconnection()
 
       case DB::POSTGRESQL:
       {
-        QString dbname(
-          "Адрес сервера: %1\n"
-          "Порт сервера: %2\n"
-          "Имя пользователя: %3"
-        );
+        QString dbname = QStringLiteral(
+                           "Адрес сервера: %1\n"
+                           "Порт сервера: %2\n"
+                           "Имя пользователя: %3"
+                         );
         return dbname.arg(
                  IP,
                  QString::number(port),
@@ -127,16 +127,21 @@ QSqlRelationalTableModel *DBRequest::getModel()
   auto model = new QSqlRelationalTableModel(nullptr,
       QSqlDatabase::database(connection));
   model->setEditStrategy(QSqlTableModel::OnFieldChange);
-  model->setTable("points");
-  model->setRelation(model->fieldIndex("pointtype"), QSqlRelation("pointtypes",
-                     "id", "name"));
-  model->setHeaderData(model->fieldIndex("longitude"), Qt::Horizontal,
-                       "Широта");
-  model->setHeaderData(model->fieldIndex("latitude"), Qt::Horizontal,
+  model->setTable(QStringLiteral("points"));
+  model->setRelation(model->fieldIndex(QStringLiteral("pointtype")),
+                     QSqlRelation(QStringLiteral("pointtypes"),
+                                  QStringLiteral("id"), QStringLiteral("name")));
+  model->setHeaderData(model->fieldIndex(QStringLiteral("longitude")),
+                       Qt::Horizontal,
                        "Долгота");
-  model->setHeaderData(model->fieldIndex("pointtype"), Qt::Horizontal,
+  model->setHeaderData(model->fieldIndex(QStringLiteral("latitude")),
+                       Qt::Horizontal,
+                       "Широта");
+  model->setHeaderData(model->fieldIndex(QStringLiteral("pointtype")),
+                       Qt::Horizontal,
                        "Тип точки");
-  model->setHeaderData(model->fieldIndex("pointtype") + 1, Qt::Horizontal,
+  model->setHeaderData(model->fieldIndex(QStringLiteral("pointtype")) + 1,
+                       Qt::Horizontal,
                        "Тsdfsd");
   return model;
 }
@@ -146,7 +151,7 @@ bool DBRequest::login(const QString &login, const QString &pass)
   QSqlQuery q = QSqlQuery(QSqlDatabase::database(connection));
 
   if (q.prepare(
-        QLatin1String("SELECT name, surname FROM users WHERE login=? AND pass=?")))
+        QStringLiteral("SELECT name, surname FROM users WHERE login=? AND pass=?")))
     {
       q.addBindValue(login);
       q.addBindValue(pass);
@@ -154,8 +159,8 @@ bool DBRequest::login(const QString &login, const QString &pass)
       if (q.exec() && q.next())
         {
           QSqlRecord rec = q.record();
-          name = rec.value("name").toString();
-          surname = rec.value("surname").toString();
+          name = rec.value(QStringLiteral("name")).toString();
+          surname = rec.value(QStringLiteral("surname")).toString();
           return true;
         }
     }
@@ -169,7 +174,7 @@ bool DBRequest::regIster(const QString &login, const QString &pass,
   QSqlQuery q = QSqlQuery(QSqlDatabase::database(connection));
 
   if (q.prepare(
-        QLatin1String("INSERT INTO users (id, login, pass, name, surname) VALUES ((SELECT COUNT(id) FROM users)+1, ?, ?, ?, ?)")))
+        QStringLiteral("INSERT INTO users (id, login, pass, name, surname) VALUES ((SELECT COUNT(id) FROM users)+1, ?, ?, ?, ?)")))
     {
       q.addBindValue(login);
       q.addBindValue(pass);
@@ -189,4 +194,44 @@ QString DBRequest::getName() const
 QString DBRequest::getSurname() const
 {
   return surname;
+}
+
+bool DBRequest::addPoint(double latitude, double longitude, int type)
+{
+  QSqlQuery q = QSqlQuery(QSqlDatabase::database(connection));
+  int id = -1;
+
+  if (q.exec(QStringLiteral("SELECT COUNT(id) AS c FROM points")) && q.next())
+    {
+      QSqlRecord rec = q.record();
+      id = rec.value(QStringLiteral("c")).toInt();
+
+      if (id == 0)
+        { id++; }
+      else
+        {
+          if (q.exec(QStringLiteral("SELECT id FROM points ORDER BY id DESC LIMIT 1"))
+              && q.next())
+            {
+              QSqlRecord rec = q.record();
+              id = rec.value(QStringLiteral("id")).toInt() + 1;
+            }
+          else
+            {
+              return false;
+            }
+        }
+    }
+
+  if (q.prepare(
+        QStringLiteral("INSERT INTO points (id, latitude, longitude, pointtype) VALUES (?, ?, ?, ?)")))
+    {
+      q.addBindValue(id);
+      q.addBindValue(latitude);
+      q.addBindValue(longitude);
+      q.addBindValue(type);
+      return q.exec();
+    }
+
+  return false;
 }

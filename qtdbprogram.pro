@@ -22,7 +22,10 @@ FORMS     += \
           mainwindow.ui
 
 RESOURCES += \
-          translations.qrc
+          translations.qrc \
+    window.qrc
+
+RC_ICONS = kitty.ico
 
 pvs_studio.output = true
 pvs_studio.cxxflags = -std=c++11

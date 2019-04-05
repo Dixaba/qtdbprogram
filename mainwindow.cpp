@@ -9,6 +9,7 @@
 #include <QRandomGenerator>
 #include <QMessageBox>
 #include <QCryptographicHash>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -96,20 +97,22 @@ void MainWindow::on_buttonConnect_clicked()
       else
         {
           QMessageBox msgBox;
-          msgBox.setText("Возможно, указаны неверное имя пользователя или пароль, перепроверьте");
-          msgBox.setWindowTitle("Не удалось подключиться к БД");
+          msgBox.setText(
+            QStringLiteral("Возможно, указаны неверное имя пользователя или пароль, перепроверьте"));
+          msgBox.setWindowTitle(
+            QStringLiteral("Не удалось подключиться к БД"));
           msgBox.setStandardButtons(QMessageBox::Ok);
           msgBox.setDefaultButton(QMessageBox::Ok);
           msgBox.setIcon(QMessageBox::Critical);
-          msgBox.setDetailedText(
-            "Также есть вероятность, что база данных повреждена. Для исправления обратитесь к системному администратору и покажите это сообщение\n\n"
-            "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, login VARCHAR UNIQUE NOT NULL, pass VARCHAR NOT NULL, name VARCHAR NOT NULL, surname VARCHAR NOT NULL);\n"
-            "CREATE TABLE IF NOT EXISTS points(id INTEGER PRIMARY KEY, latitude DECIMAL(9,6) NOT NULL, longitude DECIMAL(9,6) NOT NULL, pointtype INTEGER NOT NULL);\n"
-            "DROP TABLE IF EXISTS pointtypes;\n"
-            "CREATE TABLE pointtypes(id INTEGER PRIMARY KEY NOT NULL, name VARCHAR NOT NULL);\n"
-            "INSERT INTO pointtypes (id, name) VALUES (0, 'Ведущая');\n"
-            "INSERT INTO pointtypes (id, name) VALUES (1, 'Ведомая');\n"
-          );
+          msgBox.setDetailedText(QStringLiteral(
+                                   "Также есть вероятность, что база данных повреждена. Для исправления обратитесь к системному администратору и покажите это сообщение\n\n"
+                                   "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, login VARCHAR UNIQUE NOT NULL, pass VARCHAR NOT NULL, name VARCHAR NOT NULL, surname VARCHAR NOT NULL);\n"
+                                   "CREATE TABLE IF NOT EXISTS points(id INTEGER PRIMARY KEY, latitude DECIMAL(9,6) NOT NULL, longitude DECIMAL(9,6) NOT NULL, pointtype INTEGER NOT NULL);\n"
+                                   "DROP TABLE IF EXISTS pointtypes;\n"
+                                   "CREATE TABLE pointtypes(id INTEGER PRIMARY KEY NOT NULL, name VARCHAR NOT NULL);\n"
+                                   "INSERT INTO pointtypes (id, name) VALUES (0, 'Ведущая');\n"
+                                   "INSERT INTO pointtypes (id, name) VALUES (1, 'Ведомая');\n"
+                                 ));
           msgBox.exec();
         }
     }
@@ -119,8 +122,10 @@ void MainWindow::on_buttonConnect_clicked()
 
 void MainWindow::on_SQLiteSelectFile_clicked()
 {
-  ui->SQLiteFile->setText("Типа имя файла");
-  //TODO open file
+  QString filename = QFileDialog::getOpenFileName(this,
+                     QStringLiteral("Открыть файл БД"), nullptr,
+                     QStringLiteral("Базы данных (*.db)"));
+  ui->SQLiteFile->setText(filename);
 }
 
 void MainWindow::on_buttonLogin_clicked()
@@ -278,5 +283,23 @@ void MainWindow::closeEvent(QCloseEvent */*event*/)
 
 void MainWindow::on_buttonAddPoint_clicked()
 {
-  model->insertRow(model->rowCount());
+  if (dbr.addPoint(
+        ui->pointLatitude->value(),
+        ui->pointLongitude->value(),
+        ui->pointType->currentIndex()
+      ))
+    {
+      model->select();
+    }
+  else
+    { QMessageBox::critical(this, QStringLiteral("Ошибка"), QStringLiteral("Не удалось добавить запись")); }
+}
+
+void MainWindow::on_buttonDelete_clicked()
+{
+  if (ui->tableView->selectionModel()->selectedRows().count() > 0)
+    {
+      model->removeRow(ui->tableView->selectionModel()->selectedRows()[0].row());
+      model->select();
+    }
 }

@@ -27,6 +27,7 @@ class DBRequest {
                   const QString &surname);
     QString getName() const;
     QString getSurname() const;
+    bool addPoint(double latitude, double longitude, int type);
 
   private:
     QString IP, user, pass, database, name, surname;
