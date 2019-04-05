@@ -28,7 +28,6 @@ class MainWindow : public QMainWindow {
     void on_actionDisconnect_triggered();
     void on_actionLogout_triggered();
     void on_buttonAddPoint_clicked();
-
     void on_buttonDelete_clicked();
 
   private:
