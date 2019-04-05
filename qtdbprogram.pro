@@ -1,29 +1,29 @@
-QT        += core gui widgets sql
+QT         += core gui widgets sql
 
-TARGET    = qtdbprogram
-TEMPLATE  = app
+TARGET     = qtdbprogram
+TEMPLATE   = app
 
-DEFINES   += QT_DEPRECATED_WARNINGS
+DEFINES    += QT_DEPRECATED_WARNINGS
 
-CONFIG    += c++11
+CONFIG     += c++11
 
-SOURCES   += \
-          main.cpp \
-          mainwindow.cpp \
-          dbrequest.cpp \
-    dbdelegate.cpp
+SOURCES    += \
+           main.cpp \
+           mainwindow.cpp \
+           dbrequest.cpp \
+           dbdelegate.cpp
 
-HEADERS   += \
-          mainwindow.h \
-          dbrequest.h \
-    dbdelegate.h
+HEADERS    += \
+           mainwindow.h \
+           dbrequest.h \
+           dbdelegate.h
 
-FORMS     += \
-          mainwindow.ui
+FORMS      += \
+           mainwindow.ui
 
-RESOURCES += \
-          translations.qrc \
-    window.qrc
+RESOURCES  += \
+           translations.qrc \
+           window.qrc
 
 RC_ICONS = kitty.ico
 
