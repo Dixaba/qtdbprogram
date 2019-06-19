@@ -44,7 +44,7 @@ class MainWindow : public QMainWindow {
     QRegExpValidator *IPValidator;
     DB DBtype = DB::NOTCONNECTED;
     QString DBUser, DBPass, DBName, DBSurname;
-    DBRequest dbr;
+    DBRequest dbr; // DBRequest is needed for database requests
     QSqlRelationalTableModel *model = nullptr;
     QSortFilterProxyModel *proxyModel = nullptr;
 

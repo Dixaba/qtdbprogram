@@ -11,14 +11,21 @@ enum DB
   NOTCONNECTED
 };
 
-class DBRequest {
+class abstractDBRequest {
+    virtual bool connect() = 0;
+    virtual void disconnect() = 0;
+    virtual void setup(DB DBtype, const QString &database, const QString &IP = "",
+                       int port = 0, const QString &user = "", const QString &pass = "") = 0;
+};
+
+class DBRequest : abstractDBRequest {
   public:
     DBRequest();
     ~DBRequest();
-    bool connect();
-    void disconnect();
+    bool connect() override;
+    void disconnect() override;
     void setup(DB DBtype, const QString &database, const QString &IP = "",
-               int port = 0, const QString &user = "", const QString &pass = "");
+               int port = 0, const QString &user = "", const QString &pass = "") override;
     QString getDBname() const;
     QString getDBconnection();
     QSqlRelationalTableModel *getModel();
