@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->loginUser->setValidator(nameValidator);
   ui->registerUser->setValidator(nameValidator);
   on_serverDB_currentIndexChanged(0);
+  setWindowTitle(windowTitle() + " : DBRequest");
 }
 
 MainWindow::~MainWindow()
