@@ -188,7 +188,7 @@ bool DBRequest::regIster(const QString &login, const QString &pass,
 
 QString DBRequest::getName() const
 {
-  return name;
+  return name + "_DBRequest_";
 }
 
 QString DBRequest::getSurname() const
