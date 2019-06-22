@@ -1,4 +1,4 @@
-#ifndef DBREQUEST_H
+﻿#ifndef DBREQUEST_H
 #define DBREQUEST_H
 
 #include <QObject>

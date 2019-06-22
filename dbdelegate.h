@@ -1,4 +1,4 @@
-#ifndef DBDELEGATE_H
+﻿#ifndef DBDELEGATE_H
 #define DBDELEGATE_H
 
 #include <QSqlRelationalDelegate>

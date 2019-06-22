@@ -1,4 +1,4 @@
-// This is a personal academic project. Dear PVS-Studio, please check it.
+﻿// This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 #include "dbrequest.h"
 
@@ -98,16 +98,14 @@ QString DBRequest::getDBconnection()
     {
       case DB::SQLITE:
       {
-        return "Имя файла: " + database;
+        return u8"Имя файла: " + database;
       }
 
       case DB::POSTGRESQL:
       {
-        QString dbname = QStringLiteral(
-                           "Адрес сервера: %1\n"
-                           "Порт сервера: %2\n"
-                           "Имя пользователя: %3"
-                         );
+        QString dbname = u8"Адрес сервера: %1\n"
+                         "Порт сервера: %2\n"
+                         "Имя пользователя: %3";
         return dbname.arg(
                  IP,
                  QString::number(port),
@@ -133,16 +131,13 @@ QSqlRelationalTableModel *DBRequest::getModel()
                                   QStringLiteral("id"), QStringLiteral("name")));
   model->setHeaderData(model->fieldIndex(QStringLiteral("longitude")),
                        Qt::Horizontal,
-                       "Долгота");
+                       u8"Долгота");
   model->setHeaderData(model->fieldIndex(QStringLiteral("latitude")),
                        Qt::Horizontal,
-                       "Широта");
+                       u8"Широта");
   model->setHeaderData(model->fieldIndex(QStringLiteral("pointtype")),
                        Qt::Horizontal,
-                       "Тип точки");
-  model->setHeaderData(model->fieldIndex(QStringLiteral("pointtype")) + 1,
-                       Qt::Horizontal,
-                       "Тsdfsd");
+                       u8"Тип точки");
   return model;
 }
 
